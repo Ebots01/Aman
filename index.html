@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMAN KUMAR // GAMER & DEVELOPER</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-dark: #020208;
+            --card-bg: rgba(10, 10, 25, 0.85);
+            --neon-cyan: #00f5ff;
+            --neon-magenta: #ff00cc;
+            --neon-green: #00ff88;
+            --neon-yellow: #ffe600;
+            --neon-orange: #ff6600;
+            --text-main: #e8f4ff;
+            --text-muted: #6677aa;
+            --font-cyber: 'Share Tech Mono', monospace;
+            --font-display: 'Orbitron', sans-serif;
+            --font-body: 'Rajdhani', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Particle canvas background */
+        #bgCanvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Scanline overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 245, 255, 0.015) 2px,
+                rgba(0, 245, 255, 0.015) 4px
+            );
+            pointer-events: none;
+            z-index: 1;
+            animation: scanMove 8s linear infinite;
+        }
+
+        @keyframes scanMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100px; }
+        }
+
+        /* Vignette */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.7) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            padding: 50px 20px 30px;
+            text-align: center;
+            width: 100%;
+            animation: heroEntrance 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        @keyframes heroEntrance {
+            0% { transform: translateY(-60px) scale(0.9); opacity: 0; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        /* Profile image with hexagon shape */
+        .image-frame-full {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 25px;
+            position: relative;
+        }
+
+        .hex-border {
+            width: 180px;
+            height: 180px;
+            position: relative;
+            clip-path: polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta), var(--neon-cyan));
+            animation: hexRotateGlow 4s linear infinite;
+            padding: 3px;
+        }
+
+        @keyframes hexRotateGlow {
+            0% { filter: drop-shadow(0 0 10px var(--neon-cyan)); }
+            50% { filter: drop-shadow(0 0 25px var(--neon-magenta)) drop-shadow(0 0 50px var(--neon-cyan)); }
+            100% { filter: drop-shadow(0 0 10px var(--neon-cyan)); }
+        }
+
+        .hex-inner {
+            width: 100%;
+            height: 100%;
+            clip-path: polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+            background: #0a0a1f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .profile-img-full {
+            width: 110%;
+            height: 110%;
+            object-fit: cover;
+            filter: saturate(1.3) contrast(1.1);
+            object-position: 50% 20%;
+        }
+
+        /* Orbiting rings around profile */
+        .orbit-ring {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 1px solid transparent;
+            animation: orbit 4s linear infinite;
+        }
+
+        .orbit-ring-1 {
+            width: 210px; height: 210px;
+            border-top-color: var(--neon-cyan);
+            border-right-color: var(--neon-cyan);
+            animation-duration: 3s;
+        }
+
+        .orbit-ring-2 {
+            width: 240px; height: 240px;
+            border-bottom-color: var(--neon-magenta);
+            border-left-color: var(--neon-magenta);
+            animation-duration: 5s;
+            animation-direction: reverse;
+        }
+
+        @keyframes orbit {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* ===== GLITCH TEXT ===== */
+        .glitch {
+            font-family: var(--font-display);
+            font-size: clamp(2em, 6vw, 3.5em);
+            font-weight: 900;
+            color: var(--text-main);
+            position: relative;
+            letter-spacing: 0.05em;
+            animation: glitchMain 3s infinite;
+        }
+
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; right: 0;
+        }
+
+        .glitch::before {
+            color: var(--neon-magenta);
+            animation: glitchBefore 3s infinite;
+            clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
+        }
+
+        .glitch::after {
+            color: var(--neon-cyan);
+            animation: glitchAfter 3s infinite;
+            clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+        }
+
+        @keyframes glitchMain {
+            0%, 90%, 100% { transform: translate(0); }
+            91% { transform: translate(-2px, 1px); }
+            93% { transform: translate(2px, -1px); }
+            95% { transform: translate(-1px, 2px); }
+        }
+
+        @keyframes glitchBefore {
+            0%, 90%, 100% { transform: translate(0); opacity: 0; }
+            91% { transform: translate(3px, 0); opacity: 0.8; }
+            93% { transform: translate(-3px, 0); opacity: 0.8; }
+            95% { transform: translate(0); opacity: 0; }
+        }
+
+        @keyframes glitchAfter {
+            0%, 92%, 100% { transform: translate(0); opacity: 0; }
+            93% { transform: translate(-3px, 0); opacity: 0.8; }
+            95% { transform: translate(3px, 0); opacity: 0.8; }
+            97% { transform: translate(0); opacity: 0; }
+        }
+
+        .subtitle {
+            font-family: var(--font-cyber);
+            font-size: 0.8em;
+            color: var(--neon-cyan);
+            margin-top: 10px;
+            opacity: 0.8;
+            letter-spacing: 0.1em;
+        }
+
+        /* Typewriter cursor */
+        .subtitle::after {
+            content: '█';
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* ===== STATUS BADGES ===== */
+        .status-bar {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .status-badge {
+            font-family: var(--font-cyber);
+            font-size: 0.65em;
+            padding: 5px 12px;
+            border-radius: 2px;
+            letter-spacing: 0.1em;
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        .badge-online {
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+        }
+
+        .badge-class {
+            background: rgba(0, 245, 255, 0.1);
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+        }
+
+        .badge-mode {
+            background: rgba(255, 0, 204, 0.1);
+            border: 1px solid var(--neon-magenta);
+            color: var(--neon-magenta);
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { box-shadow: 0 0 5px currentColor; }
+            50% { box-shadow: 0 0 15px currentColor; }
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            border-radius: 8px;
+            padding: 28px;
+            margin: 15px 0;
+            width: 100%;
+            max-width: 700px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: border-color 0.4s, box-shadow 0.4s, transform 0.4s;
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Corner decorations */
+        .card::before, .card::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: var(--neon-cyan);
+            border-style: solid;
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .card::before {
+            top: 0; left: 0;
+            border-width: 2px 0 0 2px;
+        }
+
+        .card::after {
+            bottom: 0; right: 0;
+            border-width: 0 2px 2px 0;
+        }
+
+        .card:hover {
+            border-color: var(--neon-magenta);
+            box-shadow: 0 0 30px rgba(255, 0, 204, 0.2), inset 0 0 30px rgba(255, 0, 204, 0.03);
+            transform: translateY(-3px);
+        }
+
+        .card:hover::before, .card:hover::after {
+            width: 35px; height: 35px;
+            border-color: var(--neon-magenta);
+        }
+
+        /* Card inner top glow line */
+        .card-glow-line {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            animation: scanLine 3s linear infinite;
+        }
+
+        @keyframes scanLine {
+            0% { opacity: 0; transform: scaleX(0); }
+            50% { opacity: 1; transform: scaleX(1); }
+            100% { opacity: 0; transform: scaleX(0); }
+        }
+
+        .card h2 {
+            font-family: var(--font-display);
+            font-size: 1em;
+            color: var(--neon-cyan);
+            letter-spacing: 0.15em;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card p {
+            font-family: var(--font-cyber);
+            color: #99aacc;
+            line-height: 1.8;
+            font-size: 0.9em;
+        }
+
+        .icon-neon {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        /* ===== SKILLS ===== */
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .skill-item {
+            font-family: var(--font-cyber);
+            background: rgba(0, 245, 255, 0.05);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            padding: 10px 18px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            cursor: default;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-item::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.4s;
+        }
+
+        .skill-item:hover {
+            background: var(--neon-cyan);
+            color: #000;
+            font-weight: bold;
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px var(--neon-cyan), 0 0 40px rgba(0,245,255,0.3);
+            transform: scale(1.12) translateY(-3px);
+        }
+
+        .skill-item:hover::after { left: 100%; }
+
+        .skill-item i { margin-right: 6px; }
+
+        /* XP bar for each skill */
+        .skill-xp {
+            height: 2px;
+            margin-top: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 1px;
+            overflow: hidden;
+        }
+
+        .skill-xp-fill {
+            height: 100%;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 5px var(--neon-cyan);
+            animation: fillXP 2s ease-out forwards;
+            width: 0;
+        }
+
+        @keyframes fillXP {
+            to { width: var(--xp); }
+        }
+
+        /* ===== GAME SECTIONS ===== */
+        .game-container {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        canvas {
+            background-color: #000;
+            border: 1px solid rgba(0, 245, 255, 0.4);
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.8);
+            border-radius: 4px;
+            max-width: 100%;
+            display: block;
+        }
+
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .score-panel {
+            font-family: var(--font-display);
+            font-size: 0.8em;
+            color: var(--neon-magenta);
+            text-shadow: 0 0 8px var(--neon-magenta);
+            letter-spacing: 0.1em;
+        }
+
+        .score-panel span {
+            color: #fff;
+            font-size: 1.3em;
+        }
+
+        .highscore-panel {
+            font-family: var(--font-display);
+            font-size: 0.75em;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 8px var(--neon-yellow);
+            letter-spacing: 0.08em;
+        }
+
+        .highscore-panel span { color: #fff; }
+
+        .level-panel {
+            font-family: var(--font-display);
+            font-size: 0.75em;
+            color: var(--neon-green);
+            text-shadow: 0 0 8px var(--neon-green);
+            letter-spacing: 0.08em;
+        }
+
+        .level-panel span { color: #fff; }
+
+        .cyber-btn {
+            font-family: var(--font-display);
+            background: transparent;
+            color: var(--neon-cyan);
+            border: 1px solid var(--neon-cyan);
+            padding: 10px 22px;
+            font-size: 0.75em;
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+        }
+
+        .cyber-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,245,255,0.3), transparent);
+            transition: left 0.4s;
+        }
+
+        .cyber-btn:hover {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 25px var(--neon-cyan);
+            font-weight: bold;
+        }
+
+        .cyber-btn:hover::before { left: 100%; }
+
+        .cyber-btn.danger {
+            color: var(--neon-magenta);
+            border-color: var(--neon-magenta);
+        }
+
+        .cyber-btn.danger:hover {
+            background: var(--neon-magenta);
+            box-shadow: 0 0 25px var(--neon-magenta);
+            color: #000;
+        }
+
+        /* Game instructions */
+        .game-hint {
+            font-family: var(--font-cyber);
+            font-size: 0.72em;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+        }
+
+        /* ===== LEVEL UP FLASH ===== */
+        .level-up-flash {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 255, 136, 0.15);
+            z-index: 999;
+            pointer-events: none;
+            opacity: 0;
+            animation: levelFlash 0.6s ease-out forwards;
+        }
+
+        @keyframes levelFlash {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            font-family: var(--font-cyber);
+            color: var(--text-muted);
+            font-size: 0.75em;
+            margin-top: 50px;
+            padding-bottom: 30px;
+            text-align: center;
+            letter-spacing: 0.1em;
+        }
+
+        footer .footer-line {
+            width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            margin: 10px auto;
+        }
+
+        /* ===== MOBILE CONTROLS ===== */
+        .mobile-controls {
+            display: none;
+            margin-top: 15px;
+            gap: 10px;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .mobile-row { display: flex; gap: 10px; }
+
+        .d-btn {
+            width: 55px; height: 55px;
+            background: rgba(0, 245, 255, 0.1);
+            border: 1px solid rgba(0, 245, 255, 0.4);
+            color: var(--neon-cyan);
+            font-size: 1.3em;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .d-btn:active {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        @media (max-width: 600px) {
+            .mobile-controls { display: flex; }
+            canvas { width: 320px !important; height: 320px !important; }
+        }
+
+        /* ===== SCROLL ANIMATION (IntersectionObserver driven) ===== */
+        .card {
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* ===== ABOUT ME typing animation ===== */
+        .about-text {
+            overflow: hidden;
+            border-right: 2px solid var(--neon-cyan);
+            white-space: nowrap;
+            width: 0;
+        }
+
+        .about-text.typed {
+            animation: typeWriter 2.5s steps(60) 0.5s forwards, blinkCursor 0.7s step-end infinite;
+        }
+
+        @keyframes typeWriter {
+            to { width: 100%; }
+        }
+
+        @keyframes blinkCursor {
+            50% { border-color: transparent; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated particle background -->
+    <canvas id="bgCanvas"></canvas>
+
+    <div class="main-wrapper">
+
+        <!-- HERO -->
+        <header class="hero">
+            <div class="image-frame-full">
+                <div style="position:relative; width:180px; height:180px; margin:0 auto;">
+                    <div class="orbit-ring orbit-ring-1"></div>
+                    <div class="orbit-ring orbit-ring-2"></div>
+                    <div class="hex-border">
+                        <div class="hex-inner">
+                            <!-- Profile image — place your photo at images/profile.jpg -->
+                            <img src="images/profile.jpg" alt="Aman Kumar" class="profile-img-full"
+                                 onerror="this.style.display='none'; this.parentNode.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:3em;color:var(--neon-cyan);\'>⚡</div>'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h1 class="glitch" data-text="AMAN KUMAR" style="margin-top:30px;">AMAN KUMAR</h1>
+            <p class="subtitle">Class 8 // Swami Harsevanand // Coder &amp; Gamer</p>
+
+            <div class="status-bar">
+                <span class="status-badge badge-online">● ONLINE</span>
+                <span class="status-badge badge-class">CLASS 8</span>
+                <span class="status-badge badge-mode">GAME MODE: ON</span>
+            </div>
+        </header>
+
+        <!-- ABOUT ME -->
+        <section class="card">
+            <div class="card-glow-line"></div>
+            <h2><i class="fas fa-user-circle icon-neon"></i> [ ABOUT_ME ]</h2>
+            <p style="white-space:normal;">Welcome to my digital arena. I'm Aman Kumar — Class 8 student, coder, and gamer. I love building things with Python, HTML, CSS, and JavaScript. Scroll down to challenge yourself in my custom arcade games!</p>
+        </section>
+
+        <!-- SKILLS -->
+        <section class="card">
+            <div class="card-glow-line"></div>
+            <h2><i class="fas fa-code-branch icon-neon"></i> [ SKILLS_LOADOUT ]</h2>
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <i class="fab fa-html5" style="color:#e44d26;"></i> HTML5
+                    <div class="skill-xp"><div class="skill-xp-fill" style="--xp:88%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <i class="fab fa-css3-alt" style="color:#2965f1;"></i> CSS3
+                    <div class="skill-xp"><div class="skill-xp-fill" style="--xp:82%;background:var(--neon-magenta);box-shadow:0 0 5px var(--neon-magenta);"></div></div>
+                </div>
+                <div class="skill-item">
+                    <i class="fab fa-js" style="color:#f7df1e;"></i> JavaScript
+                    <div class="skill-xp"><div class="skill-xp-fill" style="--xp:70%;background:var(--neon-yellow);box-shadow:0 0 5px var(--neon-yellow);"></div></div>
+                </div>
+                <div class="skill-item">
+                    <i class="fab fa-python" style="color:#3776ab;"></i> Python
+                    <div class="skill-xp"><div class="skill-xp-fill" style="--xp:75%;background:var(--neon-green);box-shadow:0 0 5px var(--neon-green);"></div></div>
+                </div>
+                <div class="skill-item">
+                    <i class="fas fa-gamepad" style="color:var(--neon-magenta);"></i> Gaming
+                    <div class="skill-xp"><div class="skill-xp-fill" style="--xp:99%;background:var(--neon-orange);box-shadow:0 0 5px var(--neon-orange);"></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GAME 1: CYBER SNAKE -->
+        <section class="card">
+            <div class="card-glow-line"></div>
+            <h2><i class="fas fa-snake icon-neon"></i> [ GAME_1: CYBER_SNAKE ]</h2>
+            <p class="game-hint">[ ARROW KEYS ] to move — Eat food to level up &amp; speed up!</p>
+
+            <div class="game-container">
+                <canvas id="gameCanvas" width="400" height="400"></canvas>
+            </div>
+
+            <div class="game-controls">
+                <div class="score-panel">SCORE: <span id="scoreValue">0</span></div>
+                <div class="level-panel">LV: <span id="snakeLevelValue">1</span></div>
+                <div class="highscore-panel">BEST: <span id="snakeHighScore">0</span></div>
+                <button id="restartBtn" class="cyber-btn">▶ START</button>
+            </div>
+
+            <div class="mobile-controls" id="snakeMobile">
+                <div class="mobile-row"><button class="d-btn" data-key="38">▲</button></div>
+                <div class="mobile-row">
+                    <button class="d-btn" data-key="37">◀</button>
+                    <button class="d-btn" data-key="40">▼</button>
+                    <button class="d-btn" data-key="39">▶</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- GAME 2: CYBER RUNNER -->
+        <section class="card">
+            <div class="card-glow-line"></div>
+            <h2><i class="fas fa-running icon-neon"></i> [ GAME_2: CYBER_RUNNER ]</h2>
+            <p class="game-hint">[ A / D ] or [ ← / → ] to switch lanes. Collect power-ups!</p>
+
+            <div class="game-container">
+                <canvas id="runnerCanvas" width="400" height="400"></canvas>
+            </div>
+
+            <div class="game-controls">
+                <div class="score-panel">DIST: <span id="runnerScoreValue">0</span></div>
+                <div class="level-panel">LV: <span id="runnerLevelValue">1</span></div>
+                <div class="highscore-panel">BEST: <span id="runnerHighScore">0</span></div>
+                <button id="runnerRestartBtn" class="cyber-btn danger">▶ START</button>
+            </div>
+
+            <div class="mobile-controls" id="runnerMobile">
+                <div class="mobile-row">
+                    <button class="d-btn" data-runner="left">◀ LEFT</button>
+                    <button class="d-btn" data-runner="right">RIGHT ▶</button>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-line"></div>
+            <p>// SYSTEM ACCESS: AMAN KUMAR © 2026 // ALL RIGHTS RESERVED //</p>
+            <div class="footer-line"></div>
+        </footer>
+
+    </div>
+
+<script>
+// ============================================================
+//  BACKGROUND PARTICLE SYSTEM
+// ============================================================
+const bgCanvas = document.getElementById('bgCanvas');
+const bgCtx = bgCanvas.getContext('2d');
+bgCanvas.width = window.innerWidth;
+bgCanvas.height = window.innerHeight;
+window.addEventListener('resize', () => {
+    bgCanvas.width = window.innerWidth;
+    bgCanvas.height = window.innerHeight;
+});
+
+const particles = [];
+const NUM_PARTICLES = 80;
+
+for (let i = 0; i < NUM_PARTICLES; i++) {
+    particles.push({
+        x: Math.random() * bgCanvas.width,
+        y: Math.random() * bgCanvas.height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        size: Math.random() * 1.5 + 0.5,
+        alpha: Math.random() * 0.5 + 0.1,
+        color: Math.random() > 0.5 ? '#00f5ff' : '#ff00cc'
+    });
+}
+
+function drawBG() {
+    bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+
+    // Draw radial glow spots
+    const grad = bgCtx.createRadialGradient(bgCanvas.width*0.3, bgCanvas.height*0.3, 0, bgCanvas.width*0.3, bgCanvas.height*0.3, 400);
+    grad.addColorStop(0, 'rgba(0,245,255,0.04)');
+    grad.addColorStop(1, 'transparent');
+    bgCtx.fillStyle = grad;
+    bgCtx.fillRect(0,0,bgCanvas.width,bgCanvas.height);
+
+    const grad2 = bgCtx.createRadialGradient(bgCanvas.width*0.7, bgCanvas.height*0.7, 0, bgCanvas.width*0.7, bgCanvas.height*0.7, 350);
+    grad2.addColorStop(0, 'rgba(255,0,204,0.04)');
+    grad2.addColorStop(1, 'transparent');
+    bgCtx.fillStyle = grad2;
+    bgCtx.fillRect(0,0,bgCanvas.width,bgCanvas.height);
+
+    // Particles + connection lines
+    particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = bgCanvas.width;
+        if (p.x > bgCanvas.width) p.x = 0;
+        if (p.y < 0) p.y = bgCanvas.height;
+        if (p.y > bgCanvas.height) p.y = 0;
+
+        bgCtx.beginPath();
+        bgCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        bgCtx.fillStyle = p.color;
+        bgCtx.globalAlpha = p.alpha;
+        bgCtx.fill();
+        bgCtx.globalAlpha = 1;
+    });
+
+    // Draw connections
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < 120) {
+                bgCtx.beginPath();
+                bgCtx.moveTo(particles[i].x, particles[i].y);
+                bgCtx.lineTo(particles[j].x, particles[j].y);
+                bgCtx.strokeStyle = particles[i].color;
+                bgCtx.globalAlpha = (1 - dist / 120) * 0.12;
+                bgCtx.lineWidth = 0.5;
+                bgCtx.stroke();
+                bgCtx.globalAlpha = 1;
+            }
+        }
+    }
+
+    requestAnimationFrame(drawBG);
+}
+drawBG();
+
+// ============================================================
+//  SCROLL ANIMATION (Intersection Observer)
+// ============================================================
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+            setTimeout(() => {
+                entry.target.classList.add('visible');
+            }, 100);
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.card').forEach(card => observer.observe(card));
+
+// ============================================================
+//  HELPER: LEVEL UP FLASH
+// ============================================================
+function triggerLevelFlash() {
+    const el = document.createElement('div');
+    el.className = 'level-up-flash';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 700);
+}
+
+// ============================================================
+//  GAME 1: CYBER SNAKE (Enhanced)
+// ============================================================
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const scoreEl = document.getElementById('scoreValue');
+const snakeLevelEl = document.getElementById('snakeLevelValue');
+const snakeHSEl = document.getElementById('snakeHighScore');
+const restartBtn = document.getElementById('restartBtn');
+
+const GS = 20;
+let snake, food, powerUp, dx, dy, score, gameSpeed, gameLoop, isGameActive;
+let snakeHighScore = 0;
+let snakeLevel = 1;
+let particles1 = [];
+
+function initGame() {
+    snake = [{ x: 200, y: 200 }, { x: 180, y: 200 }, { x: 160, y: 200 }];
+    dx = GS; dy = 0;
+    score = 0; snakeLevel = 1;
+    gameSpeed = 160;
+    particles1 = [];
+    powerUp = null;
+    scoreEl.innerText = 0;
+    snakeLevelEl.innerText = 1;
+    isGameActive = true;
+    generateFood();
+    spawnPowerUp();
+    clearInterval(gameLoop);
+    gameLoop = setInterval(drawGame, gameSpeed);
+    restartBtn.textContent = '↺ RESTART';
+    drawInitialSnake();
+}
+
+function drawInitialSnake() {}
+
+function generateFood() {
+    food = {
+        x: Math.floor(Math.random() * (canvas.width / GS)) * GS,
+        y: Math.floor(Math.random() * (canvas.height / GS)) * GS
+    };
+}
+
+function spawnPowerUp() {
+    if (Math.random() > 0.4) {
+        powerUp = {
+            x: Math.floor(Math.random() * (canvas.width / GS)) * GS,
+            y: Math.floor(Math.random() * (canvas.height / GS)) * GS,
+            type: Math.random() > 0.5 ? 'speed_down' : 'double',
+            timer: 300
+        };
+    } else {
+        powerUp = null;
+    }
+}
+
+function emitParticles(x, y, color) {
+    for (let i = 0; i < 8; i++) {
+        particles1.push({
+            x, y,
+            vx: (Math.random() - 0.5) * 6,
+            vy: (Math.random() - 0.5) * 6,
+            alpha: 1,
+            color,
+            size: Math.random() * 4 + 2
+        });
+    }
+}
+
+document.addEventListener('keydown', changeDir);
+restartBtn.addEventListener('click', initGame);
+
+// Mobile dpad
+document.querySelectorAll('#snakeMobile .d-btn').forEach(btn => {
+    btn.addEventListener('touchstart', e => {
+        e.preventDefault();
+        changeDir({ keyCode: parseInt(btn.dataset.key) });
+    });
+    btn.addEventListener('click', () => changeDir({ keyCode: parseInt(btn.dataset.key) }));
+});
+
+function changeDir(e) {
+    if (!isGameActive) return;
+    const L=37,R=39,U=38,D=40;
+    const k = e.keyCode;
+    if ([37,38,39,40].includes(k)) e.preventDefault && e.preventDefault();
+    if (k===L && dx!==GS) { dx=-GS; dy=0; }
+    if (k===U && dy!==GS) { dx=0; dy=-GS; }
+    if (k===R && dx!==-GS) { dx=GS; dy=0; }
+    if (k===D && dy!==-GS) { dx=0; dy=GS; }
+}
+
+function drawGame() {
+    if (!isGameActive) return;
+
+    const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+    snake.unshift(head);
+
+    let ate = false;
+    if (head.x === food.x && head.y === food.y) {
+        ate = true;
+        emitParticles(food.x + GS/2, food.y + GS/2, '#ff00ff');
+        score += 10;
+        generateFood();
+        spawnPowerUp();
+
+        if (score % 50 === 0) {
+            snakeLevel++;
+            snakeLevelEl.innerText = snakeLevel;
+            triggerLevelFlash();
+            if (gameSpeed > 60) {
+                gameSpeed -= 10;
+                clearInterval(gameLoop);
+                gameLoop = setInterval(drawGame, gameSpeed);
+            }
+        }
+        scoreEl.innerText = score;
+    }
+
+    let atePowerUp = false;
+    if (powerUp && head.x === powerUp.x && head.y === powerUp.y) {
+        atePowerUp = true;
+        emitParticles(powerUp.x + GS/2, powerUp.y + GS/2, powerUp.type==='double'?'#ffe600':'#00ff88');
+        if (powerUp.type === 'double') score += 20;
+        else if (powerUp.type === 'speed_down' && gameSpeed < 200) {
+            gameSpeed += 20;
+            clearInterval(gameLoop);
+            gameLoop = setInterval(drawGame, gameSpeed);
+        }
+        scoreEl.innerText = score;
+        spawnPowerUp();
+    }
+
+    if (!ate && !atePowerUp) snake.pop();
+
+    // Wall / self collision
+    if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height || hitSelf()) {
+        if (score > snakeHighScore) {
+            snakeHighScore = score;
+            snakeHSEl.innerText = snakeHighScore;
+        }
+        gameOver();
+        return;
+    }
+
+    if (powerUp) {
+        powerUp.timer--;
+        if (powerUp.timer <= 0) spawnPowerUp();
+    }
+
+    // Clear with trail
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Grid
+    ctx.strokeStyle = 'rgba(0,245,255,0.04)';
+    ctx.lineWidth = 0.5;
+    for (let x = 0; x < canvas.width; x += GS) {
+        ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x, canvas.height); ctx.stroke();
+    }
+    for (let y = 0; y < canvas.height; y += GS) {
+        ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width, y); ctx.stroke();
+    }
+
+    // Particles
+    particles1 = particles1.filter(p => p.alpha > 0.05);
+    particles1.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        p.vx *= 0.92; p.vy *= 0.92;
+        p.alpha *= 0.9;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+    });
+
+    // Food — pulsing magenta
+    const ft = Date.now() / 400;
+    const fpulse = 0.8 + 0.2 * Math.sin(ft);
+    ctx.shadowBlur = 15 * fpulse;
+    ctx.shadowColor = '#ff00ff';
+    ctx.fillStyle = `rgba(255, 0, 255, ${fpulse})`;
+    ctx.fillRect(food.x + 2, food.y + 2, GS - 4, GS - 4);
+
+    // Power-up
+    if (powerUp) {
+        const ptp = Date.now() / 300;
+        const pp = 0.7 + 0.3 * Math.sin(ptp);
+        ctx.shadowColor = powerUp.type === 'double' ? '#ffe600' : '#00ff88';
+        ctx.shadowBlur = 12 * pp;
+        ctx.fillStyle = powerUp.type === 'double' ? '#ffe600' : '#00ff88';
+        // Diamond shape
+        ctx.save();
+        ctx.translate(powerUp.x + GS/2, powerUp.y + GS/2);
+        ctx.rotate(Math.PI/4);
+        ctx.fillRect(-6, -6, 12, 12);
+        ctx.restore();
+    }
+
+    ctx.shadowBlur = 0;
+
+    // Snake body
+    snake.forEach((seg, i) => {
+        if (i === 0) {
+            // Head with eyes
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = '#00f5ff';
+            ctx.fillRect(seg.x + 1, seg.y + 1, GS - 2, GS - 2);
+            // Eyes
+            ctx.fillStyle = '#000';
+            ctx.shadowBlur = 0;
+            const eyeX = dx > 0 ? seg.x + GS - 5 : dx < 0 ? seg.x + 2 : seg.x + GS/2 - 4;
+            const eyeY = dy > 0 ? seg.y + GS - 5 : dy < 0 ? seg.y + 2 : seg.y + GS/2 - 4;
+            ctx.fillRect(eyeX, eyeY, 3, 3);
+        } else {
+            const t = i / snake.length;
+            const r = Math.floor(0 + t * 0);
+            const g = Math.floor(245 - t * 80);
+            const b = Math.floor(255 - t * 80);
+            ctx.fillStyle = `rgb(${r},${g},${b})`;
+            ctx.shadowBlur = 6;
+            ctx.shadowColor = '#00f5ff';
+            ctx.fillRect(seg.x + 1, seg.y + 1, GS - 2, GS - 2);
+        }
+    });
+
+    ctx.shadowBlur = 0;
+
+    // HUD
+    ctx.font = `12px 'Orbitron', sans-serif`;
+    ctx.fillStyle = 'rgba(0,245,255,0.5)';
+    ctx.textAlign = 'left';
+    ctx.fillText(`LV ${snakeLevel}`, 8, 18);
+    ctx.textAlign = 'right';
+    ctx.fillText(`SPD ${Math.round((1/gameSpeed)*10000)}`, canvas.width - 8, 18);
+    ctx.textAlign = 'center';
+}
+
+function gameOver() {
+    isGameActive = false;
+    clearInterval(gameLoop);
+
+    ctx.fillStyle = 'rgba(0,0,0,0.85)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Glitch text effect
+    ctx.textAlign = 'center';
+    for (let i = 0; i < 3; i++) {
+        ctx.fillStyle = i===0?'#ff00ff':i===1?'#00f5ff':'#ffffff';
+        const off = i === 2 ? 0 : (Math.random()-0.5)*4;
+        ctx.font = `bold 36px 'Orbitron', sans-serif`;
+        ctx.fillText('SYSTEM CRASH', canvas.width/2 + off, canvas.height/2 - 20 + off*0.5);
+    }
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `16px 'Share Tech Mono', monospace`;
+    ctx.fillText(`FINAL_SCORE: ${score}`, canvas.width/2, canvas.height/2 + 20);
+    ctx.fillStyle = '#ffe600';
+    ctx.fillText(`LEVEL_REACHED: ${snakeLevel}`, canvas.width/2, canvas.height/2 + 45);
+
+    if (score >= snakeHighScore && score > 0) {
+        ctx.fillStyle = '#00ff88';
+        ctx.font = `14px 'Orbitron'`;
+        ctx.fillText('★ NEW HIGH SCORE ★', canvas.width/2, canvas.height/2 + 75);
+    }
+
+    ctx.fillStyle = 'rgba(0,245,255,0.5)';
+    ctx.font = `12px 'Share Tech Mono'`;
+    ctx.fillText('[ PRESS START TO RETRY ]', canvas.width/2, canvas.height/2 + 105);
+}
+
+function hitSelf() {
+    for (let i = 4; i < snake.length; i++) {
+        if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) return true;
+    }
+    return false;
+}
+
+// Draw initial screen
+(function snakeStartScreen() {
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = 'rgba(0,245,255,0.07)';
+    ctx.lineWidth = 0.5;
+    for (let x = 0; x < canvas.width; x+=GS) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke(); }
+    for (let y = 0; y < canvas.height; y+=GS) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke(); }
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#00f5ff';
+    ctx.font = `bold 22px 'Orbitron', sans-serif`;
+    ctx.fillText('CYBER SNAKE', canvas.width/2, canvas.height/2 - 30);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `13px 'Share Tech Mono'`;
+    ctx.fillText('PRESS ▶ START TO PLAY', canvas.width/2, canvas.height/2 + 10);
+    ctx.fillStyle = 'rgba(255,0,255,0.6)';
+    ctx.font = `11px 'Share Tech Mono'`;
+    ctx.fillText('Collect power-ups for bonuses!', canvas.width/2, canvas.height/2 + 35);
+})();
+
+// ============================================================
+//  GAME 2: CYBER RUNNER (Enhanced)
+// ============================================================
+const runCanvas = document.getElementById('runnerCanvas');
+const runCtx = runCanvas.getContext('2d');
+const runnerScoreEl = document.getElementById('runnerScoreValue');
+const runnerLevelEl = document.getElementById('runnerLevelValue');
+const runnerHSEl = document.getElementById('runnerHighScore');
+const runnerRestartBtn = document.getElementById('runnerRestartBtn');
+
+let runLoop, isRunnerActive = false;
+let runScore, runSpeed, obstacles2, playerLane, frameCount;
+let runnerHighScore = 0, runnerLevel = 1;
+let particles2 = [];
+let powerUps2 = [];
+let bgOffset = 0;
+
+const laneWidth = runCanvas.width / 3;
+const PSIZE = 32;
+
+function initRunner() {
+    isRunnerActive = true;
+    runScore = 0; runSpeed = 3.5;
+    obstacles2 = []; particles2 = []; powerUps2 = [];
+    playerLane = 1; frameCount = 0; runnerLevel = 1;
+    runnerScoreEl.innerText = 0;
+    runnerLevelEl.innerText = 1;
+    clearInterval(runLoop);
+    runLoop = setInterval(updateRunner, 1000 / 60);
+    runnerRestartBtn.textContent = '↺ RESTART';
+}
+
+document.addEventListener('keydown', e => {
+    if (!isRunnerActive) return;
+    if (e.key==='a'||e.key==='A'||e.key==='ArrowLeft') { if(playerLane>0) playerLane--; }
+    if (e.key==='d'||e.key==='D'||e.key==='ArrowRight') { if(playerLane<2) playerLane++; }
+});
+
+// Mobile
+document.querySelectorAll('#runnerMobile .d-btn').forEach(btn => {
+    ['touchstart','click'].forEach(ev => btn.addEventListener(ev, e => {
+        e.preventDefault();
+        if (!isRunnerActive) return;
+        if (btn.dataset.runner==='left' && playerLane>0) playerLane--;
+        if (btn.dataset.runner==='right' && playerLane<2) playerLane++;
+    }));
+});
+
+runnerRestartBtn.addEventListener('click', initRunner);
+
+function emitParticles2(x, y, color) {
+    for (let i = 0; i < 6; i++) {
+        particles2.push({
+            x, y,
+            vx: (Math.random()-0.5)*5,
+            vy: -(Math.random()*4+1),
+            alpha: 1,
+            color,
+            size: Math.random()*3+1
+        });
+    }
+}
+
+function updateRunner() {
+    frameCount++;
+    bgOffset = (bgOffset + runSpeed * 0.5) % 40;
+
+    // Clear
+    runCtx.fillStyle = '#000005';
+    runCtx.fillRect(0, 0, runCanvas.width, runCanvas.height);
+
+    // Moving grid bg
+    runCtx.strokeStyle = 'rgba(0,245,255,0.08)';
+    runCtx.lineWidth = 0.5;
+    for (let y = -bgOffset; y < runCanvas.height; y += 40) {
+        runCtx.beginPath();
+        runCtx.moveTo(0, y); runCtx.lineTo(runCanvas.width, y);
+        runCtx.stroke();
+    }
+    for (let x = 0; x <= runCanvas.width; x += laneWidth) {
+        runCtx.beginPath();
+        runCtx.moveTo(x, 0); runCtx.lineTo(x, runCanvas.height);
+        runCtx.stroke();
+    }
+
+    // Lane glow
+    for (let lane = 0; lane < 3; lane++) {
+        const lx = lane * laneWidth;
+        const grad = runCtx.createLinearGradient(lx, 0, lx + laneWidth, 0);
+        grad.addColorStop(0, 'transparent');
+        grad.addColorStop(0.5, lane===playerLane ? 'rgba(0,245,255,0.04)' : 'transparent');
+        grad.addColorStop(1, 'transparent');
+        runCtx.fillStyle = grad;
+        runCtx.fillRect(lx, 0, laneWidth, runCanvas.height);
+    }
+
+    // Lane dividers (animated dashes)
+    runCtx.strokeStyle = 'rgba(0,245,255,0.3)';
+    runCtx.setLineDash([20, 15]);
+    runCtx.lineDashOffset = -bgOffset * 2;
+    runCtx.lineWidth = 1;
+    [laneWidth, laneWidth*2].forEach(x => {
+        runCtx.beginPath();
+        runCtx.moveTo(x, 0); runCtx.lineTo(x, runCanvas.height);
+        runCtx.stroke();
+    });
+    runCtx.setLineDash([]);
+    runCtx.lineDashOffset = 0;
+
+    // Spawn obstacles
+    const spawnRate = Math.max(30, Math.floor(80 / (runSpeed / 3.5)));
+    if (frameCount % spawnRate === 0) {
+        const obsLane = Math.floor(Math.random() * 3);
+        const cx = obsLane * laneWidth + laneWidth / 2;
+        obstacles2.push({ cx, y: -30, lane: obsLane, w: 54, h: 18, type: 'wall' });
+    }
+
+    // Spawn power-ups
+    if (frameCount % 180 === 90) {
+        const pLane = Math.floor(Math.random() * 3);
+        powerUps2.push({
+            cx: pLane * laneWidth + laneWidth / 2,
+            y: -20,
+            lane: pLane,
+            type: Math.random() > 0.5 ? 'score' : 'slow',
+            timer: 0
+        });
+    }
+
+    const pX = playerLane * laneWidth + laneWidth / 2;
+    const pY = runCanvas.height - PSIZE - 25;
+
+    // Draw obstacles
+    for (let i = obstacles2.length - 1; i >= 0; i--) {
+        const obs = obstacles2[i];
+        obs.y += runSpeed;
+
+        // Red wall with glow
+        runCtx.shadowBlur = 15;
+        runCtx.shadowColor = '#ff0055';
+        const wg = runCtx.createLinearGradient(obs.cx - obs.w/2, 0, obs.cx + obs.w/2, 0);
+        wg.addColorStop(0, '#ff0022');
+        wg.addColorStop(0.5, '#ff5566');
+        wg.addColorStop(1, '#ff0022');
+        runCtx.fillStyle = wg;
+        runCtx.fillRect(obs.cx - obs.w/2, obs.y, obs.w, obs.h);
+        runCtx.shadowBlur = 0;
+
+        // Collision
+        if (obs.lane === playerLane &&
+            obs.y + obs.h > pY + 4 &&
+            obs.y < pY + PSIZE - 4) {
+            emitParticles2(pX, pY + PSIZE/2, '#ff0055');
+            if (runScore > runnerHighScore) {
+                runnerHighScore = runScore;
+                runnerHSEl.innerText = runnerHighScore;
+            }
+            runnerGameOver();
+            return;
+        }
+
+        if (obs.y > runCanvas.height) {
+            obstacles2.splice(i, 1);
+            runScore += 5;
+            runnerScoreEl.innerText = runScore;
+
+            const newLevel = Math.floor(runScore / 100) + 1;
+            if (newLevel > runnerLevel) {
+                runnerLevel = newLevel;
+                runnerLevelEl.innerText = runnerLevel;
+                triggerLevelFlash();
+                runSpeed += 0.4;
+            }
+        }
+    }
+
+    // Draw power-ups
+    for (let i = powerUps2.length - 1; i >= 0; i--) {
+        const pu = powerUps2[i];
+        pu.y += runSpeed;
+        pu.timer++;
+
+        const col = pu.type === 'score' ? '#ffe600' : '#00ff88';
+        const pulse = 0.7 + 0.3 * Math.sin(pu.timer * 0.15);
+        runCtx.shadowBlur = 12 * pulse;
+        runCtx.shadowColor = col;
+        runCtx.fillStyle = col;
+        runCtx.save();
+        runCtx.translate(pu.cx, pu.y);
+        runCtx.rotate(Math.PI/4);
+        runCtx.fillRect(-8, -8, 16, 16);
+        runCtx.restore();
+        runCtx.shadowBlur = 0;
+
+        // Collect
+        if (pu.lane === playerLane &&
+            pu.y + 10 > pY &&
+            pu.y - 10 < pY + PSIZE) {
+            emitParticles2(pu.cx, pu.y, col);
+            if (pu.type === 'score') { runScore += 30; runnerScoreEl.innerText = runScore; }
+            else { runSpeed = Math.max(2, runSpeed - 0.8); }
+            powerUps2.splice(i, 1);
+            continue;
+        }
+
+        if (pu.y > runCanvas.height) powerUps2.splice(i, 1);
+    }
+
+    // Particles
+    particles2 = particles2.filter(p => p.alpha > 0.05);
+    particles2.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        p.vy -= 0.1;
+        p.alpha *= 0.92;
+        runCtx.beginPath();
+        runCtx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+        runCtx.fillStyle = p.color;
+        runCtx.globalAlpha = p.alpha;
+        runCtx.fill();
+        runCtx.globalAlpha = 1;
+    });
+
+    // Player — animated cyber character
+    const t = Date.now() / 200;
+    const bob = Math.sin(t) * 1.5;
+
+    // Player glow
+    runCtx.shadowBlur = 20;
+    runCtx.shadowColor = '#00f5ff';
+    
+    // Body
+    const pg = runCtx.createLinearGradient(pX - PSIZE/2, pY + bob, pX + PSIZE/2, pY + PSIZE + bob);
+    pg.addColorStop(0, '#00f5ff');
+    pg.addColorStop(1, '#0066ff');
+    runCtx.fillStyle = pg;
+    runCtx.fillRect(pX - PSIZE/2 + 3, pY + bob, PSIZE - 6, PSIZE);
+    
+    // Head
+    runCtx.fillStyle = '#00f5ff';
+    runCtx.fillRect(pX - 8, pY + bob - 14, 16, 12);
+    
+    // Eyes
+    runCtx.fillStyle = '#000';
+    runCtx.fillRect(pX - 5, pY + bob - 11, 3, 3);
+    runCtx.fillRect(pX + 2, pY + bob - 11, 3, 3);
+
+    // Ground line
+    runCtx.fillStyle = 'rgba(0,245,255,0.3)';
+    runCtx.fillRect(0, runCanvas.height - 5, runCanvas.width, 5);
+    
+    runCtx.shadowBlur = 0;
+
+    // HUD
+    runCtx.textAlign = 'right';
+    runCtx.font = `11px 'Orbitron'`;
+    runCtx.fillStyle = 'rgba(0,245,255,0.5)';
+    runCtx.fillText(`SPD ${runSpeed.toFixed(1)}`, runCanvas.width - 8, 18);
+}
+
+function runnerGameOver() {
+    isRunnerActive = false;
+    clearInterval(runLoop);
+
+    runCtx.fillStyle = 'rgba(0,0,0,0.88)';
+    runCtx.fillRect(0, 0, runCanvas.width, runCanvas.height);
+
+    runCtx.textAlign = 'center';
+    for (let i = 0; i < 3; i++) {
+        runCtx.fillStyle = i===0?'#ff0055':i===1?'#00f5ff':'#ffffff';
+        const off = i===2?0:(Math.random()-0.5)*4;
+        runCtx.font = `bold 32px 'Orbitron', sans-serif`;
+        runCtx.fillText('YOU CRASHED', runCanvas.width/2+off, runCanvas.height/2-20);
+    }
+
+    runCtx.fillStyle = '#ffffff';
+    runCtx.font = `15px 'Share Tech Mono'`;
+    runCtx.fillText(`DISTANCE: ${runScore}`, runCanvas.width/2, runCanvas.height/2+20);
+    runCtx.fillStyle = '#ffe600';
+    runCtx.fillText(`LEVEL_REACHED: ${runnerLevel}`, runCanvas.width/2, runCanvas.height/2+45);
+
+    if (runScore >= runnerHighScore && runScore > 0) {
+        runCtx.fillStyle = '#00ff88';
+        runCtx.font = `13px 'Orbitron'`;
+        runCtx.fillText('★ NEW HIGH SCORE ★', runCanvas.width/2, runCanvas.height/2+75);
+    }
+
+    runCtx.fillStyle = 'rgba(255,0,204,0.5)';
+    runCtx.font = `11px 'Share Tech Mono'`;
+    runCtx.fillText('[ PRESS START TO RETRY ]', runCanvas.width/2, runCanvas.height/2+105);
+}
+
+// Runner start screen
+(function runnerStartScreen() {
+    runCtx.fillStyle = '#000';
+    runCtx.fillRect(0, 0, runCanvas.width, runCanvas.height);
+    runCtx.strokeStyle = 'rgba(0,245,255,0.07)';
+    for (let x=0;x<=runCanvas.width;x+=laneWidth){runCtx.beginPath();runCtx.moveTo(x,0);runCtx.lineTo(x,runCanvas.height);runCtx.stroke();}
+    runCtx.textAlign = 'center';
+    runCtx.fillStyle = '#ff00cc';
+    runCtx.font = `bold 20px 'Orbitron'`;
+    runCtx.fillText('CYBER RUNNER', runCanvas.width/2, runCanvas.height/2-30);
+    runCtx.fillStyle = '#ffffff';
+    runCtx.font = `12px 'Share Tech Mono'`;
+    runCtx.fillText('PRESS ▶ START TO RUN', runCanvas.width/2, runCanvas.height/2+10);
+    runCtx.fillStyle = 'rgba(0,255,136,0.7)';
+    runCtx.font = `11px 'Share Tech Mono'`;
+    runCtx.fillText('Collect diamonds for bonuses!', runCanvas.width/2, runCanvas.height/2+35);
+})();
+</script>
+</body>
+</html>
